@@ -3,12 +3,13 @@ title: "なぜ Hello, world! は出力されるのか"
 emoji: "🪏"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Python", "CPython"]
-published: false
+published: true
+published_at: 2025-12-09 06:00
 ---
 
 ## はじめに
 
-Pythonを学ぶ時、最初に書くのがこのコードですよね。
+Pythonを学ぶとき、最初に書くコードと言えば、やはりこれでしょうね！
 
 ```python
 print("Hello, world!")
@@ -27,8 +28,8 @@ Pythonの標準機能の多くは、裏側でC言語の関数を呼び出すこ�
 - アーキテクチャ: x86_64
 - OS: Ubuntu 22.04.5 LTS
 
-Pythonの実装はCPythonを使用します。
-CPythonのソースコードはGitHubの公式リポジトリの「v3.14.0」タグをチェックアウトして使用します。
+Pythonの実装はCPythonを使用しました。
+CPythonのソースコードはGitHubの公式リポジトリの「v3.14.0」タグをチェックアウトして使用しました。
 
 https://github.com/python/cpython
 
@@ -64,7 +65,7 @@ Pythonインタプリタ自体（/usr/bin/python3などにある実行ファイ�
 1. インタプリタ自体のビルド
    CPythonの開発者が書いた大量のC言語コードを、[gcc](https://gcc.gnu.org)などのコンパイラでコンパイルして作られた、実行可能バイナリです。私たちが普段インストールしているのはこの完成品です。
 1. スクリプトの実行
-    私たちが`python3 hello.py`を実行するとき、OS視点で見れば、単に「python という名前のC製アプリケーションが起動し、テキストファイルを読み込んだ」に過ぎません。
+    私たちが`python3 hello.py`を実行するとき、OSから見れば、単に「`python`という名前のC製アプリケーションが起動し、テキストファイルを読み込んだ」に過ぎません。
 
 <!-- 図を入れる -->
 
@@ -103,7 +104,7 @@ dis.dis('print("Hello, world!")')
               RETURN_VALUE
 ```
 
-この出力が、Python仮想マシン（CPython）が実際に処理している命令の列です。一つずつ読み解いていきましょう。
+この出力が、Python 仮想マシン（CPython のバイトコードインタプリタ）が実際に処理している命令の列です。一つずつ読み解いていきましょう。
 
 - **`LOAD_NAME`**: `print`という名前のオブジェクトをロードします。ここでは組み込み関数の`print`がロードされます。[^assign]
 - `PUSH_NULL`: 関数呼び出しの調整用です。詳細は省きます。
@@ -202,7 +203,7 @@ _PyBuiltin_Init(PyInterpreterState *interp)
 ```
 
 元となっている`builtinsmodule`を見てみましょう。
-ここに、`print`や`len`といった組み込み関数の実装が書かれています。
+ここに、`print`や`len`といった組み込み関数のエントリが並んでいます。
 
 ```c:Python/bltinmodule.c
 static struct PyModuleDef builtinsmodule = {
@@ -228,7 +229,7 @@ static PyMethodDef builtin_methods[] = {
     {"max", _PyCFunction_CAST(builtin_max), METH_FASTCALL | METH_KEYWORDS, max_doc},
     {"min", _PyCFunction_CAST(builtin_min), METH_FASTCALL | METH_KEYWORDS, min_doc},
     
-    // Print関数が登録されている！
+    // print 関数が登録されている！
     BUILTIN_PRINT_METHODDEF
 
     // ...
@@ -250,7 +251,7 @@ static PyMethodDef builtin_methods[] = {
 ようやく`print`関数のC言語実装にたどり着きました。
 重要な部分を抜粋して紹介します。
 
-この関数の引数には、モジュールやPythonの関数としての引数が渡されます。
+この関数には、モジュールオブジェクトと、Python 側から渡された引数（位置引数・キーワード引数）がまとめて渡されます。
 
 ```c
 static PyObject *
@@ -379,7 +380,7 @@ init_sys_streams(PyThreadState *tstate)
 
 ファイルディスクリプタから`TextIOWrapper`オブジェクトが作成され、`sys.stdout`に登録されているようです。
 
-ファイルディスクリプタは、UNIX系OSがファイル・ディレクトリ・ソケット・端末・デバイスなどの、「ファイルっぽいもの」を一元的に扱うための仕組みです。
+ファイルディスクリプタは、UNIX系OSがファイル・ディレクトリ・ソケット・端末・デバイスなどの「ファイルっぽいもの」を一元的に扱うための仕組みです。
 標準出力はファイルディスクリプタの番号`1`に対応しています。`0`は標準入力、`2`は標準エラー出力です。
 
 `TextIOWrapper`オブジェクトは、テキスト入出力を扱うためのラッパークラスです。このオブジェクトが、実際に文字列を書き込むための`write`メソッドを持っています。その実装を見てみましょう。
@@ -583,10 +584,18 @@ _Py_write_impl(int fd, const void *buf, size_t count, int gil_held)
 
 一行のシンプルなプログラムでも、裏側では多くの層が連携して動作していることが分かりましたね。
 こういう実装の深掘りは、コードを読む練習にもなり、言語のランタイムやOSの仕組みを理解する助けにもなります。
-GIL やバッファリング、システムコールといった概念を、副産物として一緒に学べたのも大きな収穫です。
+GILやバッファリング、システムコールといった概念を、副産物として一緒に学べたのも大きな収穫です。
 
 こういう感じで実装を覗くのは、学べることが多いので今後もやっていきたいですね。
 
 本記事は「KDIX CS Advent Calendar 2025」に参加しています。
 
 https://qiita.com/advent-calendar/2025/kdixcs
+
+## シリーズの紹介
+
+本記事は「Hello World のひみつ」シリーズの Python 編です。
+すでに公開している Rust 編では、`println!` から `libc::write` までの流れを追いかけています。
+
+https://blog.pullriku.net/posts/inside-hello-world-rust/
+
