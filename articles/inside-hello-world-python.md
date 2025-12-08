@@ -262,7 +262,9 @@ Pythonだと、引数を指定しないとデフォルト値が使われるよ�
 ```
 
 これは、このラッパー関数が自動生成されているためです。
-CPythonの実装では、組み込み関数の引数処理に`Argument Clinic`というツールが使われています。引数のパースはこの関数で、実際のロジックは`builtin_print_impl`で行う、という形になっています。
+CPythonの実装では、組み込み関数の引数処理に`Argument Clinic`というツールが使われています。引数のパースはこの関数で、実際のロジックは`builtin_print_impl`で行われます。
+
+引数解析の時点では、指定されていない引数を`None`にしておき、実際の実装でデフォルト値を設定する、という形です。
 
 ```c
     return_value = builtin_print_impl(module, __clinic_args, args_length, sep, end, file, flush);
