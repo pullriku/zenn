@@ -131,8 +131,6 @@ PythonもただのCプログラムなので、この関数から実行が始ま�
 ```c:Programs/main.c
 #include "Python.h"
 
-// ...
-
 int
 main(int argc, char **argv)
 {
@@ -157,6 +155,7 @@ Py_BytesMain(int argc, char **argv)
 
 このようにして、ここからの関数呼び出しを辿っていきます。
 さすがに全てをここで解説するのは大変なので、重要な部分だけを抜粋していきます。
+本記事で示すコードスニペットは、実際のソースコードから一部を抜粋・編集したものです。詳細は公式リポジトリを参照してください。
 
 ### 組み込みモジュールの登録
 
@@ -203,23 +202,15 @@ _PyBuiltin_Init(PyInterpreterState *interp)
 
 ```c:Python/bltinmodule.c
 static struct PyModuleDef builtinsmodule = {
-    // ...
     builtin_methods,
-    // ...
 };
 
 static PyMethodDef builtin_methods[] = {
-    // ...
-
     // input関数
     BUILTIN_INPUT_METHODDEF
     
-    // ...
-
     // len関数
     BUILTIN_LEN_METHODDEF
-
-    // ...
 
     // max、min関数
     {"max", _PyCFunction_CAST(builtin_max), METH_FASTCALL | METH_KEYWORDS, max_doc},
@@ -227,8 +218,6 @@ static PyMethodDef builtin_methods[] = {
     
     // print 関数が登録されている！
     BUILTIN_PRINT_METHODDEF
-
-    // ...
 };
 ```
 
