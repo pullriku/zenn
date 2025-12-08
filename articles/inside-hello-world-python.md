@@ -389,7 +389,7 @@ _io_TextIOWrapper_write_impl(textio *self, PyObject *text)
 実は`TextIOWrapper`は、さらに下位に`BufferedWriter`というバッファリング用のオブジェクトを持っており、最終的にはそこにデータを書き込み、OSに渡されます。
 したがって、バッファは2つあり、フラッシュも2種類あります。
 
-1. `TextIOWrapper`の`pending_bytes`バッファを`BufferedWriter`に書き込むフラッシュ
+1. `TextIOWrapper`の`pending_bytes`バッファを下層の`BufferedWriter`に書き込むフラッシュ
 2. `pending_bytes`を`BufferedWriter`に書き込み、さらに`BufferedWriter`をフラッシュしてOSにデータを書き込むフラッシュ
 
 まず、巨大なデータなら先にフラッシュします。こちらは下位層に書き込むフラッシュです。
