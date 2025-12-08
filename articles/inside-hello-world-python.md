@@ -298,19 +298,11 @@ for (i = 0; i < args_length; i++) {
         else {
             err = PyFile_WriteObject(sep, file, Py_PRINT_RAW);
         }
-        if (err) {
-            Py_DECREF(file);
-            return NULL;
-        }
     }
 
     // Py_PRINT_RAW は「引用符などを付けずにそのまま出力せよ」というフラグ
     // ここで引数を出力している
     err = PyFile_WriteObject(args[i], file, Py_PRINT_RAW);
-    if (err) {
-        Py_DECREF(file);
-        return NULL;
-    }
 }
 ```
 
@@ -338,7 +330,7 @@ PyFile_WriteObject(PyObject *v, PyObject *f, int flags)
 
 https://realpython.com/duck-typing-python/
 
-すなわち、ここでは`stdout`オブジェクトの`write`メソッドが呼び出されると思われますね。
+すなわち、ここでは`stdout`オブジェクトの`write`メソッドが呼び出されると思われます。
 それでは、このオブジェクトの実装を探っていくことにしましょう。
 
 ### `sys.stdout`オブジェクト
@@ -356,7 +348,7 @@ init_sys_streams(PyThreadState *tstate)
                        config->stdio_encoding,
                        config->stdio_errors);
 
-    // 登録している！
+    // ↓登録している！
 
     // ユーザーがstdoutを上書きしたときのバックアップ
     PySys_SetObject("__stdout__", std);
