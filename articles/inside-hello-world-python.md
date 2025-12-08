@@ -1,5 +1,5 @@
 ---
-title: "なぜ Hello, world! は出力されるのか"
+title: "Pythonの print はどう動く？ ― バイトコードからlibcの呼び出しまで"
 emoji: "🪏"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Python", "CPython"]
