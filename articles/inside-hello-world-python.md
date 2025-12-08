@@ -1,6 +1,6 @@
 ---
 title: "Pythonの print はどう動く？ ― バイトコードからlibcの呼び出しまで"
-emoji: "🪏"
+emoji: "⛏️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Python", "CPython"]
 published: true
