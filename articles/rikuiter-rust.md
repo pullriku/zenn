@@ -847,7 +847,7 @@ fn main() {
 これで、`filter`と`map`を組み合わせてデータを処理できるようになりました。いくらでも長くチェーンできますね！
 一番最初の処理の流れを追っておきます。
 
-1. `RangeUsie`が`MyIterator`を実装しているので、`filter`メソッドを呼び出せる
+1. `RangeUsize`が`MyIterator`を実装しているので、`filter`メソッドを呼び出せる
 1. `filter`は`Filter`構造体を返すが、これも`MyIterator`を実装している
 1. そのため、`map`メソッドを呼び出せる
 1. `map`は`Map`構造体を返すが、これも`MyIterator`を実装している
@@ -910,7 +910,7 @@ where
 }
 ```
 
-```rust:src/adapter/map.rsuse crate::iter::MyIterator;
+```rust:src/adapter/map.rs
 
 pub struct Map<I, F> {
     pub(crate) inner: I,
