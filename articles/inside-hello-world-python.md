@@ -418,7 +418,7 @@ else if (!PyList_CheckExact(self->pending_bytes)) {
     self->pending_bytes = list;
 ```
 
-データが一つならそのままセット、複数ならリストにまとめる、という実装ですね。
+データが一つならそのままセットし、複数ならリストにまとめる、という実装ですね。
 そして、`pending_bytes`のサイズを更新します。
 
 ```c
