@@ -86,7 +86,7 @@ Rustプロジェクトを新規作成します。まずは`src/main.rs`にコー
 
 ```bash
 cargo new --bin rikuiter
-cd myiter
+cd rikuiter
 ```
 
 ## 1. 基礎
@@ -876,7 +876,7 @@ pub mod skip;
 pub mod take;
 ```
 
-```rust:src/adapter/filter.rsuse crate::iter::MyIterator;
+```rust:src/adapter/filter.rs
 
 pub struct Filter<I, P> {
     inner: I,
@@ -938,10 +938,10 @@ where
 }
 ```
 
-```rust:src/skip.rs
+```rust:src/adapter/skip.rs
 ```
 
-```rust:src/take.rs
+```rust:src/adapter/take.rs
 ```
 
 :::
