@@ -502,19 +502,20 @@ where
 ```
 
 `find`は引数の関数が最初にtrueを返した要素を返却します。
+find は条件に合う要素を見つけた時点で止まるため、見つかった後もイテレータは途中から再開できます。
 
 ```rust:src/iter.rs
 fn find<P>(&mut self, mut predicate: P) -> Option<Self::Item>
-    where
-        P: FnMut(&Self::Item) -> bool,
-    {
-        while let Some(x) = self.next() {
-            if predicate(&x) {
-                return Some(x);
-            }
+where
+    P: FnMut(&Self::Item) -> bool,
+{
+    while let Some(x) = self.next() {
+        if predicate(&x) {
+            return Some(x);
         }
-        None
     }
+    None
+}
 ```
 
 `fold`メソッドは、イテレータの要素を畳み込んで1つの値にまとめます。初期値と畳み込み関数を受け取り、各要素に対して関数を適用していきます。
