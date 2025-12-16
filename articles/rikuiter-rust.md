@@ -971,6 +971,8 @@ impl<I> Skip<I> {
 そしていつも通り、`MyIterator`トレイトを実装します。
 
 ```rust:src/adapter/skip.rs
+use std::mem;
+
 impl<I> MyIterator for Skip<I>
 where
     I: MyIterator,
