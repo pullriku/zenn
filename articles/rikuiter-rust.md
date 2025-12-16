@@ -877,6 +877,7 @@ pub mod take;
 ```
 
 ```rust:src/adapter/filter.rs
+use crate::iter::MyIterator;
 
 pub struct Filter<I, P> {
     inner: I,
@@ -911,6 +912,7 @@ where
 ```
 
 ```rust:src/adapter/map.rs
+use crate::iter::MyIterator;
 
 pub struct Map<I, F> {
     pub(crate) inner: I,
