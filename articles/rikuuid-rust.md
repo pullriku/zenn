@@ -3,7 +3,7 @@ title: "UUIDを実装してみた！安全な乱数源から"
 emoji: "🆔"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Rust", "UUID",]
-published: false
+published: true
 ---
 
 Rustの標準ライブラリだけで**UUID**を作りました。OSから暗号学的に安全な乱数を取得して、それを元に`B7EEF135-1372-43B9-AADF-95C4A6D19609`のようなIDを生成します。
@@ -100,18 +100,19 @@ pub(crate) fn random_bytes_16()
         getrandom(buf.as_mut_ptr().cast(), 16, 0)
     };
 
-    if ret == 16 as isize {
-        unsafe { Ok(buf.assume_init()) }
-    } else {
-        Err(std::io::Error::last_os_error())
+    match ret {
+        16 => unsafe { Ok(buf.assume_init()) },
+        -1 => Err(std::io::Error::last_os_error()),
+        _ => unreachable!(),
     }
 }
 ```
 
-未初期化の配列を作り、ポインタと長さ`16`、flags`0`を渡しています。`.cast()`で、`*mut [u8; 16]`型を`*mut c_void`型にキャストしないとエラーになります。
+未初期化の配列を作り、`getrandom`に配列へのポインタと長さ`16`、flags`0`を渡しています。`.cast()`で、`*mut [u8; 16]`型を`*mut c_void`型にキャストしないとエラーになります。
 
 戻り値が`16`なら、用意した未初期化配列に値が書き込まれたことが保証できるため、`assume_init`(初期化を仮定)します。
-そうでないならエラーにします。
+`-1`ならエラーにします。
+その他の場合は起こり得ないため、`unreachable!`を書いておきます。もし何らかの不具合でこの分岐に来ると、プログラムがパニックします。
 
 ### 乱数生成(macOS)
 
